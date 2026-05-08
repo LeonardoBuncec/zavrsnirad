@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -23,62 +13,91 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      
       _counter = _counter == 0 ? 10 : _counter - 1;
-
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            Text(_counter > 0 ? 'You have pushed the button this many times:'
-             : 'Counter is 0, press again to set it to 10'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Wrap(
+                children: [
+                  ...List.generate(12, (index) {
+                    return GestureDetector(
+                      onTap: _incrementCounter,
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+  color: const Color(0xFFFFF176),
+  borderRadius: BorderRadius.circular(40),
+  border: Border.all(
+    color: const Color(0xFFFFE082),
+    width: 2,
+  ),
+  boxShadow: const [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 8,
+      offset: Offset(0, 4),
+    ),
+  ],
+),
+                        child: Center(
+                          child: Text(
+                            'Stol ${index + 1}\n$_counter',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                  GestureDetector(
+                      onTap: _incrementCounter,
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        width: 325,
+                        height: 150,
+                        decoration: BoxDecoration(
+  color: const Color.fromARGB(255, 255, 236, 64),
+  borderRadius: BorderRadius.circular(40),
+  border: Border.all(
+    color: const Color(0xFFFFE082),
+    width: 2,
+  ),
+  boxShadow: const [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 8,
+      offset: Offset(0, 4),
+    ),
+  ],
+),
+                        child: Center(
+                          child: Text(
+                            'Potvrdi odabir stola',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
