@@ -14,29 +14,28 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-  useMaterial3: true,
+        useMaterial3: true,
 
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color(0xFFFFD54F),
-    brightness: Brightness.light,
-  ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFFFD54F),
+          brightness: Brightness.light,
+        ),
 
-  scaffoldBackgroundColor: const Color(0xFFFFF8E1),
+        scaffoldBackgroundColor: const Color(0xFFFFF8E1),
 
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFFFFF176),
-    foregroundColor: Colors.black,
-    elevation: 0,
-    centerTitle: true,
-    titleTextStyle: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: Color(0xFF212121),
-    ),
-  ),
-),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFFFF176),
+          foregroundColor: Colors.black,
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF212121),
+          ),
+        ),
+      ),
       home: const MyHomePage(title: 'Virtual waiter'),
     );
   }
 }
-
