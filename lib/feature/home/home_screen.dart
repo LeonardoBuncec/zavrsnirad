@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:zavrsni1/core/constants/app_dimensions.dart';
+import 'package:zavrsni1/core/constants/app_strings.dart';
 import '../../widgets/table_card.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_dimensions.dart';
-import '../../core/constants/app_strings.dart';
 import 'home_controller.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
   final String title;
+  final int? selectedTable;
+  final Function(int) onTableSelected;
+  final VoidCallback onConfirm;
+
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.selectedTable,
+    required this.onTableSelected,
+    required this.onConfirm,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -16,42 +25,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final controller = HomeController();
 
-  void _update(int index) {
-    setState(() {
-      controller.decrementCounter(index);
-    });
-  }
-
-  void _confirm() {
-    print("Stol potvrđen");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppStrings.title),
-      ),
-
+      appBar: AppBar(title: const Text(AppStrings.title)),
       body: Column(
         children: [
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(AppDimensions.spacing),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
                 crossAxisSpacing: AppDimensions.spacing,
                 mainAxisSpacing: AppDimensions.spacing,
               ),
               itemCount: controller.tables.length,
               itemBuilder: (context, index) {
-                final table = controller.tables[index];
-
                 return TableCard(
                   index: index,
-                  counter: table.counter,
-                  onTap: () => _update(index),
+                  isSelected: widget.selectedTable == index,
+                  onTap: () => widget.onTableSelected(index),
                 );
               },
             ),
@@ -63,23 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
               width: double.infinity,
               height: AppDimensions.buttonHeight,
               child: ElevatedButton(
-                onPressed: _confirm,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radius,
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  AppStrings.confirmTable,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                onPressed: widget.selectedTable == null
+                    ? null
+                    : widget.onConfirm,
+                child: const Text(AppStrings.confirmTable),
               ),
             ),
           ),

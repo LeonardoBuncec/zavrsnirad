@@ -4,14 +4,14 @@ import '../core/constants/app_dimensions.dart';
 
 class TableCard extends StatelessWidget {
   final int index;
-  final int counter;
   final VoidCallback onTap;
+  final bool isSelected;
 
   const TableCard({
     super.key,
     required this.index,
-    required this.counter,
     required this.onTap,
+    this.isSelected = false,
   });
 
   @override
@@ -20,35 +20,20 @@ class TableCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius:
-            BorderRadius.circular(AppDimensions.radius),
+        borderRadius: BorderRadius.circular(AppDimensions.radius),
         child: Container(
-          width: AppDimensions.cardSize,
-          height: AppDimensions.cardSize,
           decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius:
-                BorderRadius.circular(AppDimensions.radius),
-            border: Border.all(
-              color: AppColors.border,
-              width: 2,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: AppColors.shadow,
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
+            color: isSelected ? AppColors.selectedCard : AppColors.card,
+            borderRadius: BorderRadius.circular(AppDimensions.radius),
+            border: Border.all(color: AppColors.border, width: 2),
           ),
-          child: Center(
-            child: Text(
-              'Stol ${index + 1}\n$counter',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.table_bar),
+              const SizedBox(height: 8),
+              Text('Stol ${index + 1}'),
+            ],
           ),
         ),
       ),
