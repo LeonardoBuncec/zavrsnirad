@@ -4,6 +4,7 @@ import 'package:zavrsni1/core/constants/app_strings.dart';
 import '../home/home_screen.dart';
 import '../menu/menu_screen.dart';
 import '../assistant/assistant_screen.dart';
+import '../cart/cart_screen.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -36,10 +37,6 @@ class _AppShellState extends State<AppShell> {
     });
   }
 
-  void _goToCart() {
-    // TODO: navigacija na košaricu
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!_tableConfirmed) {
@@ -53,7 +50,11 @@ class _AppShellState extends State<AppShell> {
       );
     }
 
-    final shellPages = [const MenuScreen(), const AssistantScreen()];
+    final shellPages = [
+      const MenuScreen(),
+      const AssistantScreen(),
+      const CartScreen(),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +67,12 @@ class _AppShellState extends State<AppShell> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: FilledButton.icon(
-              onPressed: _goToCart,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CartScreen()),
+                );
+              },
               icon: const Icon(Icons.shopping_cart),
               label: const Text(AppStrings.cartPage),
             ),

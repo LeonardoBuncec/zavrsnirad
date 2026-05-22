@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../menu/menu_screen.dart';
-import '../assistant/assistant_screen.dart';
 
 class MainShell extends StatefulWidget {
   final VoidCallback onBackHome;

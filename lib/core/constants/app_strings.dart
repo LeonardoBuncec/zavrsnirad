@@ -6,4 +6,5 @@ class AppStrings {
   static const menuPage = 'Menu';
   static const aiAssistantPage = 'AI Asistent';
   static const cartPage = 'Košarica';
+  static const orderNow = 'Naruči sada';
 }
