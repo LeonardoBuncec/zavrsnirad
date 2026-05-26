@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:zavrsni1/core/constants/app_dimensions.dart';
-import 'package:zavrsni1/core/constants/app_strings.dart';
 import '../../widgets/table_card.dart';
-import 'home_controller.dart';
+import '../../core/constants/app_dimensions.dart';
+import '../../core/constants/app_strings.dart';
 
 class MyHomePage extends StatelessWidget {
+  final List tables;
   final int? selectedTable;
   final Function(int) onTableSelected;
   final VoidCallback onConfirm;
 
   const MyHomePage({
     super.key,
+    required this.tables,
     required this.selectedTable,
     required this.onTableSelected,
     required this.onConfirm,
@@ -18,19 +19,20 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = HomeController();
-
     return Column(
       children: [
         Expanded(
           child: GridView.builder(
             padding: const EdgeInsets.all(AppDimensions.spacing),
+
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: AppDimensions.spacing,
               mainAxisSpacing: AppDimensions.spacing,
             ),
-            itemCount: controller.tables.length,
+
+            itemCount: tables.length,
+
             itemBuilder: (context, index) {
               return TableCard(
                 index: index,
@@ -40,10 +42,11 @@ class MyHomePage extends StatelessWidget {
             },
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.all(AppDimensions.spacing),
           child: SizedBox(
-            width: double.infinity,
+            width: AppDimensions.buttonWidth,
             height: AppDimensions.buttonHeight,
             child: ElevatedButton(
               onPressed: selectedTable == null ? null : onConfirm,
