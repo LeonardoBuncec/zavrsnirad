@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zavrsni1/feature/navigation/app_shell.dart';
 import 'core/theme/app_theme.dart';
-import 'feature/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: AppTheme.light,
-      home: const MyHomePage(title: 'Virtual waiter'),
-    );
+    return MaterialApp(theme: AppTheme.light, home: const AppShell());
   }
 }
