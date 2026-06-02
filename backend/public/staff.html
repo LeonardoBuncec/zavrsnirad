@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff — Narudžbe</title>
+  <link rel="stylesheet" href="staff_style.css">
+</head>
+<body>
+  <h1>🍽️ Narudžbe</h1>
+  <button id="refresh-btn" onclick="load()">↻ Osvježi</button>
+  <div id="grid"></div>
+  <p id="empty">Nema aktivnih narudžbi</p>
+
+  <script>
+    const BASE = `http://${window.location.hostname}:3000/api`;
+
+    const statusNaziv = {
+      1: 'Na čekanju',
+      2: 'U pripremi',
+      3: 'Dostavljeno',
+      4: 'Otkazano',
+    };
+
+    async function load() {
+      const res = await fetch(`${BASE}/narudzbe`);
+      const narudzbe = await res.json();
+      const grid = document.getElementById('grid');
+      const empty = document.getElementById('empty');
+      grid.innerHTML = '';
+
+      if (narudzbe.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      narudzbe.forEach(n => {
+        const ukupno = n.stavke.reduce((sum, s) => sum + s.cijena * s.kolicina, 0);
+        const vrijeme = new Date(n.vrijeme).toLocaleTimeString('hr-HR', { hour: '2-digit', minute: '2-digit' });
+
+        const card = document.createElement('div');
+        card.className = `card status-${n.id_status}`;
+        card.innerHTML = `
+          <div class="card-header">
+            <h2>Stol ${n.broj_stola}</h2>
+            <span class="status-badge">${statusNaziv[n.id_status]}</span>
+          </div>
+          <div class="vrijeme">${vrijeme}</div>
+          <div class="stavke">
+            ${n.stavke.map(s => `
+              <div class="stavka">
+                <span>${s.kolicina}x ${s.naziv}</span>
+                <span>${(s.cijena * s.kolicina).toFixed(2)} €</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="ukupno">Ukupno: ${ukupno.toFixed(2)} €</div>
+          <div class="actions">
+            ${n.id_status === 1 ? `<button class="btn-priprema" onclick="promijeniStatus(${n.id_narudzba}, 2)">U pripremi</button>` : ''}
+            ${n.id_status === 2 ? `<button class="btn-dostavljeno" onclick="promijeniStatus(${n.id_narudzba}, 3)">Dostavljeno</button>` : ''}
+            ${n.id_status !== 4 && n.id_status !== 3 ? `<button class="btn-otkazano" onclick="promijeniStatus(${n.id_narudzba}, 4)">Otkaži</button>` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function promijeniStatus(id, status) {
+      await fetch(`${BASE}/narudzbe/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_status: status }),
+      });
+      load();
+    }
+
+    load();
+    setInterval(load, 15000);
+  </script>
+</body>
+</html>
