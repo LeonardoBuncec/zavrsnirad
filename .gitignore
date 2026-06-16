@@ -1,0 +1,7 @@
+backend/node_modules
+backend/.env
+frontend/.dart_tool
+frontend/build
+frontend/.idea
+frontend/*.iml
+frontend/**/*.iml
