@@ -58,19 +58,11 @@ class _AppShellState extends State<AppShell> {
     });
   }
 
-  void _backToTableSelection() {
-    setState(() {
-      _tableConfirmed = false;
-      _selectedTable = null;
-      _quantities.clear();
-    });
-  }
-
   void _increase(int id) {
-    setState(() {
-      _quantities[id] = (_quantities[id] ?? 0) + 1;
-    });
-  }
+  setState(() {
+    _quantities[id] = (_quantities[id] ?? 0) + 1;
+  });
+}
 
   void _decrease(int id) {
     setState(() {
@@ -84,7 +76,8 @@ class _AppShellState extends State<AppShell> {
   double get _totalPrice {
     return _quantities.entries.fold(0.0, (sum, e) {
       if (e.value <= 0) return sum;
-      return sum + _artikli[e.key].price * e.value;
+      final item = _artikli.firstWhere((a) => a.id == e.key, orElse: () => _artikli.first);
+      return sum + item.price * e.value;
     });
   }
 
@@ -160,21 +153,46 @@ class _AppShellState extends State<AppShell> {
       appBar: AppBar(
         title: Text('${AppStrings.table} ${(_selectedTable ?? 0) + 1}'),
         leading: _shellIndex == 2
-            ? null
-            : IconButton(
+            ? IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: _backToTableSelection,
-              ),
+                onPressed: () => setState(() => _shellIndex = 0),
+              )
+            : null,
         actions: [
           if (_shellIndex == 2)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => setState(() => _shellIndex = 0),
-            )
+            const SizedBox()
           else
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () => setState(() => _shellIndex = 2),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () => setState(() => _shellIndex = 2),
+                ),
+                if (_totalItems > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$_totalItems',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
         ],
       ),
@@ -187,7 +205,10 @@ class _AppShellState extends State<AppShell> {
             onIncrease: _increase,
             onDecrease: _decrease,
           ),
-          const AssistantScreen(),
+          AssistantScreen(
+  artikli: _artikli,
+  onIncrease: _increase,
+),
           CartScreen(
             items: _artikli,
             quantities: _quantities,

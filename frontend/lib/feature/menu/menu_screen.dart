@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_dimensions.dart';
 import 'menu_data.dart';
 import 'menu_card.dart';
 
@@ -24,23 +23,59 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   String _selectedCategory = 'Sve';
 
+  static const List<String> _categoryOrder = [
+    'Bezalkoholna pića',
+    'Topli napici',
+    'Alkoholna pića',
+    'Predjela',
+    'Juhe',
+    'Salate',
+    'Pizze',
+    'Tjestenine',
+    'Glavna jela',
+    'Deserti',
+  ];
+
   List<String> get _categories {
     final cats = widget.items.map((e) => e.category).toSet().toList();
+    cats.sort((a, b) {
+      final ai = _categoryOrder.indexOf(a);
+      final bi = _categoryOrder.indexOf(b);
+      if (ai == -1 && bi == -1) return a.compareTo(b);
+      if (ai == -1) return 1;
+      if (bi == -1) return -1;
+      return ai.compareTo(bi);
+    });
     return ['Sve', ...cats];
   }
 
-  List<MapEntry<int, FoodItem>> get _filteredItems {
+  List<FoodItem> get _filteredItems {
     return widget.items
-        .asMap()
-        .entries
         .where((e) =>
             _selectedCategory == 'Sve' ||
-            e.value.category == _selectedCategory)
+            e.category == _selectedCategory)
         .toList();
+  }
+
+  List<dynamic> get _groupedItems {
+    if (_selectedCategory != 'Sve') return _filteredItems;
+
+    final List<dynamic> result = [];
+    final cats = _categories.where((c) => c != 'Sve').toList();
+
+    for (final cat in cats) {
+      final items = widget.items.where((e) => e.category == cat).toList();
+      if (items.isEmpty) continue;
+      result.add(cat); // header
+      result.addAll(items);
+    }
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    final grouped = _groupedItems;
+
     return Column(
       children: [
         SizedBox(
@@ -62,15 +97,42 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(AppDimensions.spacing),
-            itemCount: _filteredItems.length,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: grouped.length,
             itemBuilder: (context, index) {
-              final entry = _filteredItems[index];
+  final item = grouped[index];
+  if (item is FoodItem) {
+  }
+              if (item is String) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          item.toUpperCase(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            letterSpacing: 1.2,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                );
+              }
+
+              final foodItem = item as FoodItem;
               return MenuCard(
-                item: entry.value,
-                quantity: widget.quantities[entry.key] ?? 0,
-                onIncrease: () => widget.onIncrease(entry.key),
-                onDecrease: () => widget.onDecrease(entry.key),
+                item: foodItem,
+                quantity: widget.quantities[foodItem.id] ?? 0,
+                onIncrease: () => widget.onIncrease(foodItem.id),
+                onDecrease: () => widget.onDecrease(foodItem.id),
               );
             },
           ),

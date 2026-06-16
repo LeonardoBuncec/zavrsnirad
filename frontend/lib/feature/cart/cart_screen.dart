@@ -46,8 +46,7 @@ class CartScreen extends StatelessWidget {
       itemCount: cartItems.length,
       itemBuilder: (context, index) {
         final entry = cartItems[index];
-        final food = items[entry.key];
-
+final food = items.firstWhere((e) => e.id == entry.key);
         return MenuCard(
           item: food,
           quantity: entry.value,

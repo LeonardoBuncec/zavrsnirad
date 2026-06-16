@@ -44,16 +44,22 @@ class MyHomePage extends StatelessWidget {
         ),
 
         Padding(
-          padding: const EdgeInsets.all(AppDimensions.spacing),
-          child: SizedBox(
-            width: AppDimensions.buttonWidth,
-            height: AppDimensions.buttonHeight,
-            child: ElevatedButton(
-              onPressed: selectedTable == null ? null : onConfirm,
-              child: const Text(AppStrings.confirmTable),
-            ),
-          ),
-        ),
+  padding: const EdgeInsets.only(
+    left: AppDimensions.spacing,
+    right: AppDimensions.spacing,
+    bottom: 32,
+  ),
+  child: SafeArea(
+    child: SizedBox(
+      width: AppDimensions.buttonWidth,
+      height: AppDimensions.buttonHeight,
+      child: ElevatedButton(
+        onPressed: selectedTable == null ? null : onConfirm,
+        child: const Text(AppStrings.confirmTable),
+      ),
+    ),
+  ),
+),
       ],
     );
   }

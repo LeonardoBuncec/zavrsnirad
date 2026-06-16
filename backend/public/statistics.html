@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistika</title>
+  <link rel="stylesheet" href="statistics.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+  <h1>📊 Statistika prodaje</h1>
+  <button id="refresh-btn" onclick="load()">↻ Osvježi</button>
+
+  <div class="cards-row">
+    <div class="stat-card">
+      <div class="stat-label">Ukupno narudžbi</div>
+      <div class="stat-value" id="ukupnoNarudzbi">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ukupni prihod</div>
+      <div class="stat-value" id="ukupniPrihod">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Upita AI asistentu</div>
+      <div class="stat-value" id="ukupnoUpita">—</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-label">Uspješnost asistenta</div>
+      <div class="stat-value" id="uspjesnostAsistenta">—</div>
+      <div class="stat-sublabel">upita završilo preporukom</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="chart-box">
+      <h2>Najprodavaniji artikli</h2>
+      <canvas id="chartArtikli"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2>Prihod po kategoriji</h2>
+      <canvas id="chartKategorije"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2>Narudžbe po satu</h2>
+      <canvas id="chartSati"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2>Najpreporučeniji artikli (AI)</h2>
+      <canvas id="chartPreporuke"></canvas>
+    </div>
+  </div>
+
+  <div class="table-box">
+    <h2>Najprodavaniji artikli — detalji</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Artikl</th>
+          <th>Kategorija</th>
+          <th>Prodano kom.</th>
+          <th>Prihod</th>
+        </tr>
+      </thead>
+      <tbody id="tableArtikli"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const BASE = `http://${window.location.hostname}:3000/api`;
+    let charts = {};
+
+    function destroyChart(id) {
+      if (charts[id]) {
+        charts[id].destroy();
+        delete charts[id];
+      }
+    }
+
+    async function load() {
+      const res = await fetch(`${BASE}/statistike`);
+      const data = await res.json();
+
+      document.getElementById('ukupnoNarudzbi').textContent = data.ukupnoNarudzbi;
+      document.getElementById('ukupniPrihod').textContent = parseFloat(data.ukupniPrihod).toFixed(2) + ' €';
+      document.getElementById('ukupnoUpita').textContent = data.ukupnoUpita;
+      document.getElementById('uspjesnostAsistenta').textContent = data.uspjesnostAsistenta + '%';
+
+      // Chart — najprodavaniji artikli
+      destroyChart('artikli');
+      charts['artikli'] = new Chart(document.getElementById('chartArtikli'), {
+        type: 'bar',
+        data: {
+          labels: data.najprodavanijiArtikli.map(a => a.naziv),
+          datasets: [{
+            label: 'Prodano kom.',
+            data: data.najprodavanijiArtikli.map(a => a.prodano),
+            backgroundColor: '#FFD54F',
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // Chart — prihod po kategoriji
+      destroyChart('kategorije');
+      const colors = ['#FF7043','#FFA726','#66BB6A','#42A5F5','#AB47BC','#26C6DA','#EC407A','#8D6E63','#78909C','#FFD54F'];
+      charts['kategorije'] = new Chart(document.getElementById('chartKategorije'), {
+        type: 'doughnut',
+        data: {
+          labels: data.prihodPoKategoriji.map(k => k.kategorija),
+          datasets: [{
+            data: data.prihodPoKategoriji.map(k => parseFloat(k.prihod)),
+            backgroundColor: colors,
+          }]
+        },
+        options: {
+          plugins: { legend: { position: 'right' } }
+        }
+      });
+
+      // Chart — narudžbe po satu
+      destroyChart('sati');
+      const satiLabels = Array.from({length: 24}, (_, i) => `${i}:00`);
+      const satiData = Array(24).fill(0);
+      data.narudzbePoSatu.forEach(s => { satiData[s.sat] = s.narudzbi; });
+      charts['sati'] = new Chart(document.getElementById('chartSati'), {
+        type: 'line',
+        data: {
+          labels: satiLabels,
+          datasets: [{
+            label: 'Narudžbi',
+            data: satiData,
+            borderColor: '#42A5F5',
+            backgroundColor: 'rgba(66,165,245,0.1)',
+            fill: true,
+            tension: 0.4,
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // Chart — preporuke asistenta
+      destroyChart('preporuke');
+      charts['preporuke'] = new Chart(document.getElementById('chartPreporuke'), {
+        type: 'bar',
+        data: {
+          labels: data.preporukeAsistenta.map(p => p.naziv),
+          datasets: [{
+            label: 'Preporuceno puta',
+            data: data.preporukeAsistenta.map(p => p.preporuceno),
+            backgroundColor: '#AB47BC',
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // Tablica
+      const tbody = document.getElementById('tableArtikli');
+      tbody.innerHTML = '';
+      data.najprodavanijiArtikli.forEach((a, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${a.naziv}</td>
+            <td>${a.kategorija}</td>
+            <td>${a.prodano}</td>
+            <td>${parseFloat(a.prihod).toFixed(2)} €</td>
+          </tr>
+        `;
+      });
+    }
+
+    load();
+  </script>
+</body>
+</html>

@@ -24,6 +24,64 @@ h1 {
 
 #refresh-btn:hover { background: #FFC107; }
 
+/* Pozivi */
+#pozivi-section {
+  display: none;
+  margin-bottom: 24px;
+}
+
+.pozivi-title {
+  margin-bottom: 12px;
+  color: #e53935;
+  font-size: 18px;
+}
+
+#pozivi-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.poziv-card {
+  background: #fff3e0;
+  border: 2px solid #e53935;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: pulse 1.5s infinite;
+}
+
+.poziv-icon { font-size: 24px; }
+
+.poziv-info strong { display: block; }
+
+.poziv-vrijeme {
+  font-size: 12px;
+  color: #888;
+}
+
+.btn-rijesi {
+  margin-left: auto;
+  padding: 8px 16px;
+  background: #e53935;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-rijesi:hover { background: #c62828; }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(229, 57, 53, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0); }
+}
+
+/* Narudžbe grid */
 #grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -42,6 +100,7 @@ h1 {
 .card.status-2 { border-left-color: #FFA726; }
 .card.status-3 { border-left-color: #66BB6A; }
 .card.status-4 { border-left-color: #bbb; }
+.card.status-5 { border-left-color: #7E57C2; }
 
 .card-header {
   display: flex;
@@ -64,6 +123,7 @@ h1 {
 .status-2 .status-badge { background: #FFA726; }
 .status-3 .status-badge { background: #66BB6A; }
 .status-4 .status-badge { background: #bbb; }
+.status-5 .status-badge { background: #7E57C2; }
 
 .vrijeme {
   font-size: 12px;
@@ -107,10 +167,12 @@ h1 {
 .btn-priprema { background: #FFA726; color: white; }
 .btn-dostavljeno { background: #66BB6A; color: white; }
 .btn-otkazano { background: #ef5350; color: white; }
+.btn-naplaceno { background: #7E57C2; color: white; }
 
 .btn-priprema:hover { background: #FB8C00; }
 .btn-dostavljeno:hover { background: #43A047; }
 .btn-otkazano:hover { background: #e53935; }
+.btn-naplaceno:hover { background: #5E35B1; }
 
 #empty {
   text-align: center;

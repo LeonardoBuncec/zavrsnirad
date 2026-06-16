@@ -9,6 +9,7 @@
 <body>
   <h1>🍽️ Narudžbe</h1>
   <button id="refresh-btn" onclick="load()">↻ Osvježi</button>
+
   <div id="grid"></div>
   <p id="empty">Nema aktivnih narudžbi</p>
 
@@ -20,6 +21,7 @@
       2: 'U pripremi',
       3: 'Dostavljeno',
       4: 'Otkazano',
+      5: 'Naplaćeno',
     };
 
     async function load() {
@@ -60,7 +62,8 @@
           <div class="actions">
             ${n.id_status === 1 ? `<button class="btn-priprema" onclick="promijeniStatus(${n.id_narudzba}, 2)">U pripremi</button>` : ''}
             ${n.id_status === 2 ? `<button class="btn-dostavljeno" onclick="promijeniStatus(${n.id_narudzba}, 3)">Dostavljeno</button>` : ''}
-            ${n.id_status !== 4 && n.id_status !== 3 ? `<button class="btn-otkazano" onclick="promijeniStatus(${n.id_narudzba}, 4)">Otkaži</button>` : ''}
+            ${n.id_status === 3 ? `<button class="btn-naplaceno" onclick="promijeniStatus(${n.id_narudzba}, 5)">Naplati</button>` : ''}
+            ${n.id_status !== 4 && n.id_status !== 5 && n.id_status !== 3 ? `<button class="btn-otkazano" onclick="promijeniStatus(${n.id_narudzba}, 4)">Otkaži</button>` : ''}
           </div>
         `;
         grid.appendChild(card);
