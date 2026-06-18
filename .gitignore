@@ -1,7 +1,14 @@
+# backend
 backend/node_modules
 backend/.env
-frontend/.dart_tool
+
+# frontend (Flutter)
 frontend/build
+frontend/.dart_tool
 frontend/.idea
-frontend/*.iml
-frontend/**/*.iml
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+
+# general
+.env
+build

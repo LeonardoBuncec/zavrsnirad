@@ -4,7 +4,7 @@ import '../../feature/menu/menu_data.dart';
 import '../../models/table_model.dart';
 
 class ApiService {
-  static const String base = 'http://192.168.178.120:3000/api';
+  static const String base = 'http://192.168.18.164:3000/api';
 
   // Dohvati artikle
   static Future<List<FoodItem>> getArtikli() async {
