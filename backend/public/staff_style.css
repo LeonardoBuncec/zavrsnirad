@@ -99,8 +99,8 @@ h1 {
 .card.status-1 { border-left-color: #FF7043; }
 .card.status-2 { border-left-color: #FFA726; }
 .card.status-3 { border-left-color: #66BB6A; }
-.card.status-4 { border-left-color: #bbb; }
-.card.status-5 { border-left-color: #7E57C2; }
+.card.status-5 { border-left-color: #bbb; }
+.card.status-4 { border-left-color: #7E57C2; }
 
 .card-header {
   display: flex;
@@ -122,8 +122,8 @@ h1 {
 .status-1 .status-badge { background: #FF7043; }
 .status-2 .status-badge { background: #FFA726; }
 .status-3 .status-badge { background: #66BB6A; }
-.status-4 .status-badge { background: #bbb; }
-.status-5 .status-badge { background: #7E57C2; }
+.status-5 .status-badge { background: #bbb; }
+.status-4 .status-badge { background: #7E57C2; }
 
 .vrijeme {
   font-size: 12px;

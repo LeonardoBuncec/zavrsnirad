@@ -20,8 +20,8 @@
       1: 'Na čekanju',
       2: 'U pripremi',
       3: 'Dostavljeno',
-      4: 'Otkazano',
-      5: 'Naplaćeno',
+      4: 'Naplaćeno',
+      5: 'Otkazano',
     };
 
     async function load() {
@@ -62,8 +62,11 @@
           <div class="actions">
             ${n.id_status === 1 ? `<button class="btn-priprema" onclick="promijeniStatus(${n.id_narudzba}, 2)">U pripremi</button>` : ''}
             ${n.id_status === 2 ? `<button class="btn-dostavljeno" onclick="promijeniStatus(${n.id_narudzba}, 3)">Dostavljeno</button>` : ''}
-            ${n.id_status === 3 ? `<button class="btn-naplaceno" onclick="promijeniStatus(${n.id_narudzba}, 5)">Naplati</button>` : ''}
-            ${n.id_status !== 4 && n.id_status !== 5 && n.id_status !== 3 ? `<button class="btn-otkazano" onclick="promijeniStatus(${n.id_narudzba}, 4)">Otkaži</button>` : ''}
+            ${n.id_status === 3 ? `<button class="btn-naplaceno" onclick="promijeniStatus(${n.id_narudzba}, 4)">Naplati</button>` : ''}
+
+${n.id_status !== 4 && n.id_status !== 5 && n.id_status !== 3
+  ? `<button class="btn-otkazano" onclick="promijeniStatus(${n.id_narudzba}, 5)">Otkaži</button>`
+  : ''}
           </div>
         `;
         grid.appendChild(card);
