@@ -1,13 +1,17 @@
-# backend
-backend/node_modules
-backend/.env
-
-# frontend (Flutter)
-frontend/build
-frontend/.dart_tool
-frontend/.idea
+# Flutter
+frontend/build/
+frontend/.dart_tool/
 frontend/.flutter-plugins
 frontend/.flutter-plugins-dependencies
+frontend/.packages
+
+# Android build
+frontend/android/app/build/
+frontend/android/build/
+
+# Backend
+backend/node_modules
+backend/.env
 
 # general
 .env
